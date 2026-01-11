@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2050 CAFE - Cocoa Personality Diagnostic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #0a0a0f;
+      color: #e8e8e8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+      pointer-events: none;
+      z-index: 1;
+      animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100%); }
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(0,245,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      color: #00f5ff;
+      text-shadow: 0 0 20px rgba(0,245,255,0.5);
+      letter-spacing: 0.3em;
+      margin-bottom: 10px;
+    }
+
+    h1 span {
+      color: #ff2d95;
+      text-shadow: 0 0 20px rgba(255,45,149,0.5);
+    }
+
+    .subtitle {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      color: #6a6a7a;
+      letter-spacing: 0.3em;
+    }
+
+    .question-card {
+      background: rgba(18, 18, 26, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .question-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      color: #00f5ff;
+      letter-spacing: 0.2em;
+      margin-bottom: 15px;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      color: #ffffff;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: grid;
+      gap: 15px;
+    }
+
+    .option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .option:hover {
+      border-color: #00f5ff;
+      background: rgba(0,245,255,0.1);
+      transform: translateX(5px);
+    }
+
+    .option:hover::before {
+      left: 100%;
+    }
+
+    .option-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      color: #00f5ff;
+      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+    }
+
+    .option-text {
+      font-size: 1rem;
+      color: #e8e8e8;
+      line-height: 1.5;
+    }
+
+    .result-card {
+      background: rgba(18, 18, 26, 0.95);
+      border: 2px solid;
+      border-radius: 12px;
+      padding: 50px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      animation: resultAppear 0.5s ease;
+    }
+
+    @keyframes resultAppear {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .result-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      color: #6a6a7a;
+      letter-spacing: 0.3em;
+      margin-bottom: 20px;
+    }
+
+    .result-cocoa-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 20px currentColor;
+    }
+
+    .result-cocoa-jp {
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .result-recipe {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .recipe-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      color: #00f5ff;
+      letter-spacing: 0.2em;
+      margin-bottom: 15px;
+    }
+
+    .recipe-item {
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .recipe-label {
+      font-family: 'Orbitron', monospace;
+      color: #6a6a7a;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      width: 120px;
+    }
+
+    .result-description {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 30px;
+      color: #b8b8b8;
+    }
+
+    .result-keywords {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .keyword {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.1em;
+    }
+
+    .restart-btn {
+      background: rgba(0,245,255,0.1);
+      border: 2px solid #00f5ff;
+      color: #00f5ff;
+      padding: 15px 40px;
+      border-radius: 8px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .restart-btn:hover {
+      background: rgba(0,245,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,245,255,0.3);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Cocoa Colors */
+    .color-oldfashion { border-color: #8b7355; color: #8b7355; }
+    .color-orange { border-color: #ff9f4a; color: #ff9f4a; }
+    .color-sesame { border-color: #7a6f5d; color: #7a6f5d; }
+    .color-marshmallow { border-color: #ffc8c8; color: #ffc8c8; }
+    .color-caramel { border-color: #c9a96e; color: #c9a96e; }
+    .color-adult { border-color: #8b6f47; color: #8b6f47; }
+    .color-chocoa { border-color: #d2691e; color: #d2691e; }
+    .color-ginger { border-color: #d4a574; color: #d4a574; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .question-card { padding: 30px 20px; }
+      .question-text { font-size: 1.1rem; }
+      .result-card { padding: 30px 20px; }
+      .result-cocoa-name { font-size: 1.8rem; }
+      .result-cocoa-jp { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>2050<span>CAFE</span></h1>
+      <p class="subtitle">PERSONALITY DIAGNOSTIC</p>
+    </div>
+
+    <!-- Question 1 -->
+    <div id="q1" class="question-card">
+      <div class="question-number">QUESTION 1 / 7</div>
+      <div class="question-text">あなたは今日ハッピーですか？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ1('yes')">
+          <div class="option-label">A</div>
+          <div class="option-text">はい</div>
+        </div>
+        <div class="option" onclick="answerQ1('no')">
+          <div class="option-label">B</div>
+          <div class="option-text">いいえ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div id="q2" class="question-card hidden">
+      <div class="question-number">QUESTION 2 / 7</div>
+      <div class="question-text">あなたは今日ラッキーですか？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ2('yes')">
+          <div class="option-label">A</div>
+          <div class="option-text">はい</div>
+        </div>
+        <div class="option" onclick="answerQ2('no')">
+          <div class="option-label">B</div>
+          <div class="option-text">いいえ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div id="q3" class="question-card hidden">
+      <div class="question-number">QUESTION 3 / 7</div>
+      <div class="question-text">朝、目が覚めて最初にすることは？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ3('A')">
+          <div class="option-label">A</div>
+          <div class="option-text">カーテンを開ける</div>
+        </div>
+        <div class="option" onclick="answerQ3('B')">
+          <div class="option-label">B</div>
+          <div class="option-text">スマホを見る</div>
+        </div>
+        <div class="option" onclick="answerQ3('C')">
+          <div class="option-label">C</div>
+          <div class="option-text">もう少し布団にいる</div>
+        </div>
+        <div class="option" onclick="answerQ3('D')">
+          <div class="option-label">D</div>
+          <div class="option-text">水を飲む</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div id="q4" class="question-card hidden">
+      <div class="question-number">QUESTION 4 / 7</div>
+      <div class="question-text">一人で過ごす休日。どう使いたい？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ4('A')">
+          <div class="option-label">A</div>
+          <div class="option-text">静かに読書</div>
+        </div>
+        <div class="option" onclick="answerQ4('B')">
+          <div class="option-label">B</div>
+          <div class="option-text">行ったことのない街を歩く</div>
+        </div>
+        <div class="option" onclick="answerQ4('C')">
+          <div class="option-label">C</div>
+          <div class="option-text">部屋を整理してリセット</div>
+        </div>
+        <div class="option" onclick="answerQ4('D')">
+          <div class="option-label">D</div>
+          <div class="option-text">友だちを誘って出かける</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div id="q5" class="question-card hidden">
+      <div class="question-number">QUESTION 5 / 7</div>
+      <div class="question-text">本を読むならどんな場所がいい？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ5('A')">
+          <div class="option-label">A</div>
+          <div class="option-text">誰もいない図書館の奥</div>
+        </div>
+        <div class="option" onclick="answerQ5('B')">
+          <div class="option-label">B</div>
+          <div class="option-text">知らない街のカフェ</div>
+        </div>
+        <div class="option" onclick="answerQ5('C')">
+          <div class="option-label">C</div>
+          <div class="option-text">自分の部屋のいつもの場所</div>
+        </div>
+        <div class="option" onclick="answerQ5('D')">
+          <div class="option-label">D</div>
+          <div class="option-text">公園のベンチで風を感じながら</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 6 -->
+    <div id="q6" class="question-card hidden">
+      <div class="question-number">QUESTION 6 / 7</div>
+      <div class="question-text">「静けさ」と聞いて思い浮かぶのは？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ6('A')">
+          <div class="option-label">A</div>
+          <div class="option-text">雪が降り積もる深夜</div>
+        </div>
+        <div class="option" onclick="answerQ6('B')">
+          <div class="option-label">B</div>
+          <div class="option-text">誰もいない美術館</div>
+        </div>
+        <div class="option" onclick="answerQ6('C')">
+          <div class="option-label">C</div>
+          <div class="option-text">自分の呼吸だけが聞こえる部屋</div>
+        </div>
+        <div class="option" onclick="answerQ6('D')">
+          <div class="option-label">D</div>
+          <div class="option-text">夕日が沈む海辺</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 7 -->
+    <div id="q7" class="question-card hidden">
+      <div class="question-number">QUESTION 7 / 7</div>
+      <div class="question-text">AIに関わらせたくないことは？</div>
+      <div class="options">
+        <div class="option" onclick="answerQ7('A')">
+          <div class="option-label">A</div>
+          <div class="option-text">今夜、何を食べるか</div>
+        </div>
+        <div class="option" onclick="answerQ7('B')">
+          <div class="option-label">B</div>
+          <div class="option-text">誰に会いたいと思うか</div>
+        </div>
+        <div class="option" onclick="answerQ7('C')">
+          <div class="option-label">C</div>
+          <div class="option-text">自分が何者か、という問い</div>
+        </div>
+        <div class="option" onclick="answerQ7('D')">
+          <div class="option-label">D</div>
+          <div class="option-text">何を楽しいと感じるか</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden"></div>
+  </div>
+
+  <script>
+    const scores = {
+      oldfashion: 0,
+      orange: 0,
+      sesame: 0,
+      marshmallow: 0,
+      caramel: 0,
+      adult: 0,
+      chocoa: 0,
+      ginger: 0
+    };
+
+    const cocoas = {
+      oldfashion: {
+        nameEn: 'OLD FASHIONED COCOA',
+        nameJp: 'オールドファッションココア',
+        base: 'ココア',
+        topping: 'なし',
+        description: 'あなたは「本物を知ってる」人。何も足さない、何も引かない。純粋なココアの味わいこそが、いちばん美しいって知ってるよね。',
+        keywords: ['Classic', 'Pure', 'Traditional', 'クラシック', '純粋', '伝統'],
+        color: 'oldfashion'
+      },
+      orange: {
+        nameEn: 'ORANGE MARMALADE COCOA',
+        nameJp: 'オレンジマーマレイドココア',
+        base: 'マーマレイド',
+        topping: 'オレンジピール',
+        description: 'あなたは「明るく楽しく」がモットーの人。オレンジの爽やかさが、みんなを笑顔にする。そんな華やかさが似合うよ。',
+        keywords: ['Bright', 'Fresh', 'Social', '華やか', '爽やか', '社交的'],
+        color: 'orange'
+      },
+      sesame: {
+        nameEn: 'BLACK SESAME KINAKO COCOA',
+        nameJp: '黒ごまきなこココア',
+        base: '黒ごま',
+        topping: 'きなこ',
+        description: 'あなたは「いつものが落ち着く」人。黒ごまときな粉の深い味わいは、ホッとする和のやさしさ。変わらないって、いいよね。',
+        keywords: ['Nostalgic', 'Japanese', 'Comfort', '和', 'なつかしい', '安心'],
+        color: 'sesame'
+      },
+      marshmallow: {
+        nameEn: 'MARSHMALLOW WHIP COCOA',
+        nameJp: 'マシュマロホイップココア',
+        base: 'ー',
+        topping: 'マシュマロ&ホイップ',
+        description: 'あなたは「今を楽しみたい」人。ふわふわのマシュマロとホイップが溶けていく瞬間。それが、しあわせだよね。',
+        keywords: ['Happy', 'Moment', 'Sweet', '癒し', '今を楽しむ', '幸せ'],
+        color: 'marshmallow'
+      },
+      caramel: {
+        nameEn: 'CARAMEL SALT COCOA',
+        nameJp: 'キャラメルソルトココア',
+        base: '塩',
+        topping: 'キャラメルクランチ',
+        description: 'あなたは「ちょうどいいが好き」な人。甘さと塩気の絶妙なバランス。トレンディだけど、落ち着きもある。そんな感じ、いいよね。',
+        keywords: ['Balanced', 'Trendy', 'Sophisticated', 'バランス', 'トレンディ', '洗練'],
+        color: 'caramel'
+      },
+      adult: {
+        nameEn: 'ADULT COCOA',
+        nameJp: 'おとなココア',
+        base: 'コーヒー',
+        topping: 'コーヒー（粉）',
+        description: 'あなたは「深く考えたい」人。コーヒーとチョコの苦みと甘みが混ざり合う、大人の味わい。集中したい時に、そばにいてほしい一杯だよ。',
+        keywords: ['Focus', 'Deep', 'Mature', '集中', '深み', '大人'],
+        color: 'adult'
+      },
+      chocoa: {
+        nameEn: 'CHOCOA',
+        nameJp: 'チョコア',
+        base: 'バニラ',
+        topping: 'チョコフレーク',
+        description: 'あなたは「楽しいことが好き」な人。バニラのやさしさに、チョコフレークのサクサク。遊び心いっぱいのココアだよ。',
+        keywords: ['Fun', 'Playful', 'Casual', '楽しい', '遊び心', 'カジュアル'],
+        color: 'chocoa'
+      },
+      ginger: {
+        nameEn: 'GINGER SPICE COCOA',
+        nameJp: 'ジンジャースパイスココア',
+        base: '生姜',
+        topping: 'シナモン',
+        description: 'あなたは「新しいを求める」人。生姜とシナモンのスパイスが体をじんわり温める。ちょっと冒険したい気分の時に、ぴったりだよ。',
+        keywords: ['Warm', 'Adventure', 'Spicy', '温め', '探求', '冒険'],
+        color: 'ginger'
+      }
+    };
+
+    function answerQ1(answer) {
+      // Q1は結果に影響なし
+      document.getElementById('q1').classList.add('hidden');
+      document.getElementById('q2').classList.remove('hidden');
+    }
+
+    function answerQ2(answer) {
+      // Q2は結果に影響なし
+      document.getElementById('q2').classList.add('hidden');
+      document.getElementById('q3').classList.remove('hidden');
+    }
+
+    function answerQ3(answer) {
+      // Q3: 朝、目が覚めて最初にすることは？
+      const q3Scores = {
+        'A': { oldfashion: 1, caramel: 1 },  // カーテンを開ける
+        'B': { orange: 1, ginger: 1 },       // スマホを見る
+        'C': { sesame: 1, marshmallow: 1 },  // 布団
+        'D': { oldfashion: 1, adult: 1 }     // 水を飲む
+      };
+      
+      Object.keys(q3Scores[answer]).forEach(cocoa => {
+        scores[cocoa] += q3Scores[answer][cocoa];
+      });
+      
+      document.getElementById('q3').classList.add('hidden');
+      document.getElementById('q4').classList.remove('hidden');
+    }
+
+    function answerQ4(answer) {
+      // Q4: 一人で過ごす休日
+      const q4Scores = {
+        'A': { oldfashion: 2, sesame: 1 },   // 静かに読書
+        'B': { ginger: 2, adult: 1 },        // 知らない街
+        'C': { oldfashion: 2, caramel: 1 },  // 部屋を整理
+        'D': { orange: 2, chocoa: 1 }        // 友だちと
+      };
+      
+      Object.keys(q4Scores[answer]).forEach(cocoa => {
+        scores[cocoa] += q4Scores[answer][cocoa];
+      });
+      
+      document.getElementById('q4').classList.add('hidden');
+      document.getElementById('q5').classList.remove('hidden');
+    }
+
+    function answerQ5(answer) {
+      // Q5: 本を読むならどんな場所？
+      const q5Scores = {
+        'A': { oldfashion: 2, sesame: 1 },   // 図書館の奥
+        'B': { ginger: 2, adult: 1 },        // 知らない街のカフェ
+        'C': { sesame: 2, marshmallow: 1 },  // 自分の部屋
+        'D': { oldfashion: 2, orange: 1 }    // 公園のベンチ
+      };
+      
+      Object.keys(q5Scores[answer]).forEach(cocoa => {
+        scores[cocoa] += q5Scores[answer][cocoa];
+      });
+      
+      document.getElementById('q5').classList.add('hidden');
+      document.getElementById('q6').classList.remove('hidden');
+    }
+
+    function answerQ6(answer) {
+      // Q6: 静けさで思い浮かぶのは？（決定打）
+      const q6Scores = {
+        'A': { oldfashion: 3 },      // 雪の深夜
+        'B': { adult: 3 },           // 美術館
+        'C': { sesame: 3 },          // 呼吸だけの部屋
+        'D': { marshmallow: 3 }      // 夕日の海辺
+      };
+      
+      Object.keys(q6Scores[answer]).forEach(cocoa => {
+        scores[cocoa] += q6Scores[answer][cocoa];
+      });
+      
+      document.getElementById('q6').classList.add('hidden');
+      document.getElementById('q7').classList.remove('hidden');
+    }
+
+    function answerQ7(answer) {
+      // Q7: AIに関わらせたくないこと（最終調整）
+      const q7Scores = {
+        'A': { chocoa: 2, ginger: 1 },       // 今夜何を食べるか
+        'B': { sesame: 2, orange: 1 },       // 誰に会いたいか
+        'C': { oldfashion: 2, adult: 1 },    // 自分が何者か
+        'D': { marshmallow: 2, caramel: 1 }  // 何を楽しいと感じるか
+      };
+      
+      Object.keys(q7Scores[answer]).forEach(cocoa => {
+        scores[cocoa] += q7Scores[answer][cocoa];
+      });
+      
+      showResult();
+    }
+
+    function showResult() {
+      let maxScore = 0;
+      let resultCocoa = '';
+      
+      Object.keys(scores).forEach(cocoa => {
+        if (scores[cocoa] > maxScore) {
+          maxScore = scores[cocoa];
+          resultCocoa = cocoa;
+        }
+      });
+      
+      const cocoa = cocoas[resultCocoa];
+      
+      const resultHTML = `
+        <div class="result-card color-${cocoa.color}">
+          <div class="result-title">YOUR COCOA IS</div>
+          <div class="result-cocoa-name">${cocoa.nameEn}</div>
+          <div class="result-cocoa-jp">${cocoa.nameJp}</div>
+          
+          <div class="result-recipe">
+            <div class="recipe-title">RECIPE</div>
+            <div class="recipe-item">
+              <span class="recipe-label">BASE:</span>
+              ${cocoa.base}
+            </div>
+            <div class="recipe-item">
+              <span class="recipe-label">TOPPING:</span>
+              ${cocoa.topping}
+            </div>
+          </div>
+          
+          <div class="result-description">${cocoa.description}</div>
+          
+          <div class="result-keywords">
+            ${cocoa.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
+          </div>
+          
+          <button class="restart-btn" onclick="restart()">RESTART</button>
+        </div>
+      `;
+      
+      document.getElementById('q7').classList.add('hidden');
+      document.getElementById('result').innerHTML = resultHTML;
+      document.getElementById('result').classList.remove('hidden');
+    }
+
+    function restart() {
+      Object.keys(scores).forEach(key => scores[key] = 0);
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('q1').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
