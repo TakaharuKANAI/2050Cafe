@@ -269,6 +269,80 @@
       display: none;
     }
 
+    .other-recommendations {
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .other-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      color: #6a6a7a;
+      letter-spacing: 0.3em;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .other-cocoa {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 4px solid;
+      border-radius: 8px;
+      padding: 25px 30px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+
+    .other-cocoa:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateX(5px);
+    }
+
+    .other-rank {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: currentColor;
+      min-width: 50px;
+      text-align: center;
+      opacity: 0.5;
+    }
+
+    .other-content {
+      flex: 1;
+    }
+
+    .other-name-en {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: currentColor;
+      margin-bottom: 5px;
+    }
+
+    .other-name-jp {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #e8e8e8;
+    }
+
+    .other-recipe {
+      font-size: 0.8rem;
+      color: #6a6a7a;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .other-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #b8b8b8;
+    }
+
     /* Cocoa Colors */
     .color-oldfashion { border-color: #8b7355; color: #8b7355; }
     .color-orange { border-color: #ff9f4a; color: #ff9f4a; }
@@ -286,6 +360,27 @@
       .result-card { padding: 30px 20px; }
       .result-cocoa-name { font-size: 1.8rem; }
       .result-cocoa-jp { font-size: 1.5rem; }
+      
+      .other-recommendations {
+        margin-top: 30px;
+        padding-top: 30px;
+      }
+      
+      .other-cocoa {
+        padding: 20px 15px;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .other-rank {
+        font-size: 1.2rem;
+        min-width: auto;
+        text-align: left;
+      }
+      
+      .other-name-en { font-size: 0.9rem; }
+      .other-name-jp { font-size: 1.1rem; }
+      .other-description { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -470,8 +565,8 @@
         nameJp: 'オールドファッションココア',
         base: 'ココア',
         topping: 'なし',
-        description: 'あなたは「本物を知ってる」人。何も足さない、何も引かない。純粋なココアの味わいこそが、いちばん美しいって知ってるよね。',
-        keywords: ['Classic', 'Pure', 'Traditional', 'クラシック', '純粋', '伝統'],
+        description: 'あなたは「シンプルがいちばん」って知ってる人だね。何もたさない、何もひかない。ふつうのココアが、いちばんおいしいって分かってるんだね。',
+        keywords: ['シンプル', 'ほんもの', 'クラシック'],
         color: 'oldfashion'
       },
       orange: {
@@ -479,8 +574,8 @@
         nameJp: 'オレンジマーマレイドココア',
         base: 'マーマレイド',
         topping: 'オレンジピール',
-        description: 'あなたは「明るく楽しく」がモットーの人。オレンジの爽やかさが、みんなを笑顔にする。そんな華やかさが似合うよ。',
-        keywords: ['Bright', 'Fresh', 'Social', '華やか', '爽やか', '社交的'],
+        description: 'あなたは「げんきで楽しい」のが好きな人だね。オレンジのさわやかさで、まわりのみんなを笑顔にできるよ。そんなあかるさがにあうね。',
+        keywords: ['あかるい', 'さわやか', 'げんき'],
         color: 'orange'
       },
       sesame: {
@@ -488,8 +583,8 @@
         nameJp: '黒ごまきなこココア',
         base: '黒ごま',
         topping: 'きなこ',
-        description: 'あなたは「いつものが落ち着く」人。黒ごまときな粉の深い味わいは、ホッとする和のやさしさ。変わらないって、いいよね。',
-        keywords: ['Nostalgic', 'Japanese', 'Comfort', '和', 'なつかしい', '安心'],
+        description: 'あなたは「いつものがいい」って思う人だね。黒ごまときなこの深い味は、ホッとするやさしさ。かわらないって、いいことだよね。',
+        keywords: ['やさしい', 'ほっとする', 'なつかしい'],
         color: 'sesame'
       },
       marshmallow: {
@@ -497,8 +592,8 @@
         nameJp: 'マシュマロホイップココア',
         base: 'ー',
         topping: 'マシュマロ&ホイップ',
-        description: 'あなたは「今を楽しみたい」人。ふわふわのマシュマロとホイップが溶けていく瞬間。それが、しあわせだよね。',
-        keywords: ['Happy', 'Moment', 'Sweet', '癒し', '今を楽しむ', '幸せ'],
+        description: 'あなたは「今を楽しみたい」人だね。ふわふわのマシュマロとホイップがとけていく時間。それが、しあわせだよね。',
+        keywords: ['ふわふわ', 'あまい', 'しあわせ'],
         color: 'marshmallow'
       },
       caramel: {
@@ -506,8 +601,8 @@
         nameJp: 'キャラメルソルトココア',
         base: '塩',
         topping: 'キャラメルクランチ',
-        description: 'あなたは「ちょうどいいが好き」な人。甘さと塩気の絶妙なバランス。トレンディだけど、落ち着きもある。そんな感じ、いいよね。',
-        keywords: ['Balanced', 'Trendy', 'Sophisticated', 'バランス', 'トレンディ', '洗練'],
+        description: 'あなたは「ちょうどいいのが好き」な人だね。あまさとしょっぱさの、ちょうどいいバランス。おしゃれだけど、おちつく感じもあるよね。',
+        keywords: ['バランス', 'おしゃれ', 'ちょうどいい'],
         color: 'caramel'
       },
       adult: {
@@ -515,8 +610,8 @@
         nameJp: 'おとなココア',
         base: 'コーヒー',
         topping: 'コーヒー（粉）',
-        description: 'あなたは「深く考えたい」人。コーヒーとチョコの苦みと甘みが混ざり合う、大人の味わい。集中したい時に、そばにいてほしい一杯だよ。',
-        keywords: ['Focus', 'Deep', 'Mature', '集中', '深み', '大人'],
+        description: 'あなたは「よく考えたい」人だね。コーヒーとチョコのにがさとあまさが、おとなっぽい味。しゅうちゅうしたいときに、そばにほしい一ぱいだよ。',
+        keywords: ['しゅうちゅう', 'おとな', 'かんがえる'],
         color: 'adult'
       },
       chocoa: {
@@ -524,8 +619,8 @@
         nameJp: 'チョコア',
         base: 'バニラ',
         topping: 'チョコフレーク',
-        description: 'あなたは「楽しいことが好き」な人。バニラのやさしさに、チョコフレークのサクサク。遊び心いっぱいのココアだよ。',
-        keywords: ['Fun', 'Playful', 'Casual', '楽しい', '遊び心', 'カジュアル'],
+        description: 'あなたは「楽しいことが大好き」な人だね。バニラのやさしさに、チョコフレークのサクサク。あそびごころいっぱいのココアだよ。',
+        keywords: ['楽しい', 'サクサク', 'わくわく'],
         color: 'chocoa'
       },
       ginger: {
@@ -533,8 +628,8 @@
         nameJp: 'ジンジャースパイスココア',
         base: '生姜',
         topping: 'シナモン',
-        description: 'あなたは「新しいを求める」人。生姜とシナモンのスパイスが体をじんわり温める。ちょっと冒険したい気分の時に、ぴったりだよ。',
-        keywords: ['Warm', 'Adventure', 'Spicy', '温め', '探求', '冒険'],
+        description: 'あなたは「あたらしいことが好き」な人だね。しょうがとシナモンのスパイスが、からだをじんわりあたためる。ぼうけんしたい気分のときに、ぴったりだよ。',
+        keywords: ['あたたかい', 'ぼうけん', 'スパイシー'],
         color: 'ginger'
       }
     };
@@ -554,10 +649,10 @@
     function answerQ3(answer) {
       // Q3: 朝、目が覚めて最初にすることは？
       const q3Scores = {
-        'A': { oldfashion: 1, caramel: 1 },  // カーテンを開ける
-        'B': { orange: 1, ginger: 1 },       // スマホを見る
-        'C': { sesame: 1, marshmallow: 1 },  // 布団
-        'D': { oldfashion: 1, adult: 1 }     // 水を飲む
+        'A': { caramel: 2, adult: 1 },         // カーテンを開ける
+        'B': { orange: 2, chocoa: 1 },         // スマホを見る
+        'C': { sesame: 2, marshmallow: 1 },    // 布団
+        'D': { ginger: 2, oldfashion: 1 }      // 水を飲む
       };
       
       Object.keys(q3Scores[answer]).forEach(cocoa => {
@@ -571,10 +666,10 @@
     function answerQ4(answer) {
       // Q4: 一人で過ごす休日
       const q4Scores = {
-        'A': { oldfashion: 2, sesame: 1 },   // 静かに読書
-        'B': { ginger: 2, adult: 1 },        // 知らない街
-        'C': { oldfashion: 2, caramel: 1 },  // 部屋を整理
-        'D': { orange: 2, chocoa: 1 }        // 友だちと
+        'A': { adult: 3, sesame: 1 },          // 静かに読書
+        'B': { ginger: 3, chocoa: 1 },         // 知らない街
+        'C': { sesame: 3, caramel: 1 },        // 部屋を整理
+        'D': { orange: 3, marshmallow: 1 }     // 友だちと
       };
       
       Object.keys(q4Scores[answer]).forEach(cocoa => {
@@ -588,10 +683,10 @@
     function answerQ5(answer) {
       // Q5: 本を読むならどんな場所？
       const q5Scores = {
-        'A': { oldfashion: 2, sesame: 1 },   // 図書館の奥
-        'B': { ginger: 2, adult: 1 },        // 知らない街のカフェ
-        'C': { sesame: 2, marshmallow: 1 },  // 自分の部屋
-        'D': { oldfashion: 2, orange: 1 }    // 公園のベンチ
+        'A': { oldfashion: 3, ginger: 1 },     // 図書館の奥
+        'B': { chocoa: 3, adult: 1 },          // 知らない街のカフェ
+        'C': { marshmallow: 3, sesame: 1 },    // 自分の部屋
+        'D': { caramel: 3, orange: 1 }         // 公園のベンチ
       };
       
       Object.keys(q5Scores[answer]).forEach(cocoa => {
@@ -605,10 +700,10 @@
     function answerQ6(answer) {
       // Q6: 静けさで思い浮かぶのは？（決定打）
       const q6Scores = {
-        'A': { oldfashion: 3 },      // 雪の深夜
-        'B': { adult: 3 },           // 美術館
-        'C': { sesame: 3 },          // 呼吸だけの部屋
-        'D': { marshmallow: 3 }      // 夕日の海辺
+        'A': { ginger: 4, oldfashion: 3 },     // 雪の深夜
+        'B': { adult: 4, chocoa: 3 },          // 美術館
+        'C': { sesame: 4, marshmallow: 3 },    // 呼吸だけの部屋
+        'D': { caramel: 4, orange: 3 }         // 夕日の海辺
       };
       
       Object.keys(q6Scores[answer]).forEach(cocoa => {
@@ -622,10 +717,10 @@
     function answerQ7(answer) {
       // Q7: AIに関わらせたくないこと（最終調整）
       const q7Scores = {
-        'A': { chocoa: 2, ginger: 1 },       // 今夜何を食べるか
-        'B': { sesame: 2, orange: 1 },       // 誰に会いたいか
-        'C': { oldfashion: 2, adult: 1 },    // 自分が何者か
-        'D': { marshmallow: 2, caramel: 1 }  // 何を楽しいと感じるか
+        'A': { chocoa: 4, ginger: 2 },         // 今夜何を食べるか
+        'B': { orange: 4, caramel: 2 },        // 誰に会いたいか
+        'C': { oldfashion: 4, adult: 2 },      // 自分が何者か
+        'D': { marshmallow: 4, sesame: 2 }     // 何を楽しいと感じるか
       };
       
       Object.keys(q7Scores[answer]).forEach(cocoa => {
@@ -636,49 +731,70 @@
     }
 
     function showResult() {
-      let maxScore = 0;
-      let resultCocoa = '';
+      // スコアを配列に変換してソート
+      const sortedCocoas = Object.keys(scores)
+        .map(cocoa => ({ name: cocoa, score: scores[cocoa] }))
+        .sort((a, b) => b.score - a.score);
       
-      Object.keys(scores).forEach(cocoa => {
-        if (scores[cocoa] > maxScore) {
-          maxScore = scores[cocoa];
-          resultCocoa = cocoa;
-        }
-      });
+      const topCocoa = cocoas[sortedCocoas[0].name];
       
-      const cocoa = cocoas[resultCocoa];
+      // 2位以降のココア
+      const otherCocoas = sortedCocoas.slice(1).map((item, index) => {
+        const cocoa = cocoas[item.name];
+        return `
+          <div class="other-cocoa color-${cocoa.color}">
+            <div class="other-rank">#${index + 2}</div>
+            <div class="other-content">
+              <div class="other-name-en">${cocoa.nameEn}</div>
+              <div class="other-name-jp">${cocoa.nameJp}</div>
+              <div class="other-recipe">ベース:${cocoa.base} / トッピング:${cocoa.topping}</div>
+              <div class="other-description">${cocoa.description}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
       
       const resultHTML = `
-        <div class="result-card color-${cocoa.color}">
-          <div class="result-title">YOUR COCOA IS</div>
-          <div class="result-cocoa-name">${cocoa.nameEn}</div>
-          <div class="result-cocoa-jp">${cocoa.nameJp}</div>
+        <div class="result-card color-${topCocoa.color}">
+          <div class="result-title">YOUR BEST MATCH</div>
+          <div class="result-cocoa-name">${topCocoa.nameEn}</div>
+          <div class="result-cocoa-jp">${topCocoa.nameJp}</div>
           
           <div class="result-recipe">
             <div class="recipe-title">RECIPE</div>
             <div class="recipe-item">
               <span class="recipe-label">BASE:</span>
-              ${cocoa.base}
+              ${topCocoa.base}
             </div>
             <div class="recipe-item">
               <span class="recipe-label">TOPPING:</span>
-              ${cocoa.topping}
+              ${topCocoa.topping}
             </div>
           </div>
           
-          <div class="result-description">${cocoa.description}</div>
+          <div class="result-description">${topCocoa.description}</div>
           
           <div class="result-keywords">
-            ${cocoa.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
+            ${topCocoa.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
           </div>
           
           <button class="restart-btn" onclick="restart()">RESTART</button>
+        </div>
+        
+        <div class="other-recommendations">
+          <div class="other-title">OTHER RECOMMENDATIONS</div>
+          ${otherCocoas}
         </div>
       `;
       
       document.getElementById('q7').classList.add('hidden');
       document.getElementById('result').innerHTML = resultHTML;
       document.getElementById('result').classList.remove('hidden');
+      
+      // トップにスムーズにスクロール
+      setTimeout(() => {
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
 
     function restart() {
@@ -687,6 +803,5 @@
       document.getElementById('q1').classList.remove('hidden');
     }
   </script>
-  
 </body>
 </html>
